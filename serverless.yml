@@ -7,12 +7,9 @@ package:
     - node_modules/**
     - venv/**
 
-plugins:
-  - serverless-python-requirements
-
 provider:
   name: aws
-  runtime: python2.7
+  runtime: nodejs6.10
   environment:
     DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
     SLACK_WEBHOOK: ${env:SLACK_WEBHOOK}
@@ -30,17 +27,17 @@ provider:
 
 functions:
   cron:
-    handler: events.check_new.check_events
-    events:
-      - schedule: rate(3 hours)
-  reminder:
-    handler: events.post_reminder.check_reminder
-    events:
-      - schedule: cron(0 14 * * ? *)
-  weekly:
-    handler: events.week_ahead.check_ahead
-    events:
-      - schedule: cron(0 14 ? * MON *)
+    handler: bot/check_new.check_new
+  #   # events:
+  #   #   - schedule: rate(3 hours)
+  # reminder:
+  #   handler: events.post_reminder.check_reminder
+  #   events:
+  #     - schedule: cron(0 14 * * ? *)
+  # weekly:
+  #   handler: events.week_ahead.check_ahead
+  #   events:
+  #     - schedule: cron(0 14 ? * MON *)
 
 resources:
   Resources:
